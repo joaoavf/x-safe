@@ -2,21 +2,27 @@
 import { fetchABI } from '@/server/fetch-abi';
 import React, { useState } from 'react';
 
+
+
 const App = () => {
   const [showModal, setShowModal] = useState(false);
   const [contracts, setContracts] = useState([]);
-  const [newContract, setNewContract] = useState({ blockchain: 'ethereum', address: '', ABI: [] });
+  const [newContract, setNewContract] = useState({ blockchain: 'ethereum', address: '', ABI: [], selectedFunction: ''});
 
   const addContract = async () => {
-    console.log('newContract', newContract);
     const ABI = await fetchABI(newContract.blockchain, newContract.address);
     // Add ABI to contract
     newContract.ABI = ABI;
     const newContracts = [...contracts, newContract];
-    console.log('newContracts2222', newContracts)
     setContracts(newContracts);
     setShowModal(false);
   };
+
+  function updateContract(contract, selectedFunction) {
+    contract.selectedFunction = selectedFunction;
+    const newContracts = [...contracts];
+    setContracts(newContracts);
+  }
 
   return (
     <div>
@@ -54,12 +60,30 @@ const App = () => {
               <td>{contract.blockchain}</td>
               <td>{contract.address}</td>
               <td>
-              <select>
+              <select onChange={(e) => updateContract(contract, e.target.value )}>
                 {contract?.ABI?.length > 0 ? contract.ABI.map((contract, index) => (
                   <option key={index}>{contract.name}</option>
                 )) : <></>}
               </select>
               </td>
+              <td>
+              {contract.selectedFunction !== '' && contract.ABI.map((abiFunction, index) => {
+                if (abiFunction.name === contract.selectedFunction) {
+                  return (
+                    <div key={index}>
+                      <h3>{abiFunction.name}</h3>              
+                      {/* Generate input fields for each input in abiFunction.inputs */}
+                      {abiFunction.inputs.map((input, inputIndex) => (
+                        <div key={inputIndex}>
+                          <label>{`${input.name} (${input.type})`}</label>
+                          <input type="text" />
+                        </div>
+                      ))}
+                    </div>
+                  );
+                }})
+              }
+            </td>
             </tr>
           ))}
         </tbody>

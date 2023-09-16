@@ -1,4 +1,5 @@
-export const networks = {ethereum: 
+export const networks = {
+    ethereum: 
     {
         chainId: 1,
         blockExplorerUrl: 'https://api.etherscan.io/api',
@@ -12,6 +13,12 @@ export type Network = {
     apiKey: string;
 }
 
+const EMPTY = {
+    name: '',
+    type: '',
+    inputs: [],
+  }
+
 export async function fetchABI(networkName: string, address: string): Promise<any> {
     const network = networks[networkName];
     const URL = `${network.blockExplorerUrl}?module=contract&action=getabi&address=${address}&apikey=${network.apiKey}`;
@@ -21,7 +28,7 @@ export async function fetchABI(networkName: string, address: string): Promise<an
     if (ABI.status === '0') {
         throw new Error(ABI.result);
     } else {
-        return JSON.parse(ABI.result).filter((item: any) => item.type === 'function' && item.constant == false).sort((a, b) => {
+        const treatedABI = JSON.parse(ABI.result).filter((item: any) => item.type === 'function' && item.constant == false).sort((a, b) => {
             if (a.name < b.name) {
               return -1;
             }
@@ -30,6 +37,7 @@ export async function fetchABI(networkName: string, address: string): Promise<an
             }
             return 0;
           });;
+        return [EMPTY, ...treatedABI]
     }
 }
 
