@@ -52,6 +52,8 @@ const App = () => {
             <th>Blockchain</th>
             <th>Address</th>
             <th>Functions</th>
+            <th>Inputs</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -71,7 +73,6 @@ const App = () => {
                 if (abiFunction.name === contract.selectedFunction) {
                   return (
                     <div key={index}>
-                      <h3>{abiFunction.name}</h3>              
                       {/* Generate input fields for each input in abiFunction.inputs */}
                       {abiFunction.inputs.map((input, inputIndex) => (
                         <div key={inputIndex}>
@@ -83,6 +84,9 @@ const App = () => {
                   );
                 }})
               }
+            </td>
+            <td>
+              <button>Call</button>
             </td>
             </tr>
           ))}
