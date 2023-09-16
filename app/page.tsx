@@ -1,12 +1,17 @@
 "use client";
+import { fetchABI } from '@/server/fetch-abi';
 import React, { useState } from 'react';
 
 const App = () => {
   const [showModal, setShowModal] = useState(false);
   const [contracts, setContracts] = useState([]);
-  const [newContract, setNewContract] = useState({ blockchain: '', address: '' });
+  const [newContract, setNewContract] = useState({ blockchain: '', address: '', ABI: [] });
 
-  const addContract = () => {
+  const addContract = async () => {
+    console.log('newContract', newContract);
+    const ABI = await fetchABI(newContract.blockchain, newContract.address);
+    // Add ABI to contract
+    newContract.ABI = ABI;
     const newContracts = [...contracts, newContract];
     setContracts(newContracts);
     setShowModal(false);
@@ -20,9 +25,9 @@ const App = () => {
         <div>
           <h2>Add a Contract</h2>
           <select onChange={(e) => setNewContract({ ...newContract, blockchain: e.target.value })}>
-            <option>Ethereum</option>
-            <option>Arbitrum</option>
-            <option>Polygon</option>
+            <option>ethereum</option>
+            <option>arbitrum</option>
+            <option>polygon</option>
           </select>
           <input
             type="text"
@@ -48,11 +53,11 @@ const App = () => {
               <td>{contract.blockchain}</td>
               <td>{contract.address}</td>
               <td>
-                {/* Replace this with fetched ABI functions */}
-                <select>
-                  <option>function1</option>
-                  <option>function2</option>
-                </select>
+              <select>
+                {contract.ABI.map((name, index) => (
+                  <option key={index}>{name}</option>
+                ))}
+              </select>
               </td>
             </tr>
           ))}
