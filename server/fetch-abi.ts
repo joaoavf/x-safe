@@ -21,7 +21,7 @@ export async function fetchABI(networkName: string, address: string): Promise<an
     if (ABI.status === '0') {
         throw new Error(ABI.result);
     } else {
-        return ABI.result;
+        return JSON.parse(ABI.result);
     }
 }
 

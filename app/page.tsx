@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 const App = () => {
   const [showModal, setShowModal] = useState(false);
   const [contracts, setContracts] = useState([]);
-  const [newContract, setNewContract] = useState({ blockchain: '', address: '', ABI: [] });
+  const [newContract, setNewContract] = useState({ blockchain: 'ethereum', address: '', ABI: [] });
 
   const addContract = async () => {
     console.log('newContract', newContract);
@@ -13,6 +13,7 @@ const App = () => {
     // Add ABI to contract
     newContract.ABI = ABI;
     const newContracts = [...contracts, newContract];
+    console.log('newContracts2222', newContracts)
     setContracts(newContracts);
     setShowModal(false);
   };
@@ -54,9 +55,9 @@ const App = () => {
               <td>{contract.address}</td>
               <td>
               <select>
-                {contract.ABI.map((name, index) => (
-                  <option key={index}>{name}</option>
-                ))}
+                {contract?.ABI?.length > 0 ? contract.ABI.map((contract, index) => (
+                  <option key={index}>{contract.name}</option>
+                )) : <></>}
               </select>
               </td>
             </tr>
