@@ -1,8 +1,7 @@
 "use client";
 import { fetchABI } from '@/server/fetch-abi';
 import React, { useState } from 'react';
-
-
+import { Web3Button } from '@web3modal/react'
 
 const App = () => {
   const [showModal, setShowModal] = useState(false);
@@ -26,11 +25,13 @@ const App = () => {
 
   return (
     <div>
+      <Web3Button />
       <button onClick={() => setShowModal(true)}>Add</button>
-
       {showModal && (
         <div>
-          <h2>Add a Contract</h2>
+          <div className="z-10 w-full items-left justify-between font-mono text-sm lg:flex">
+          </div>
+
           <select onChange={(e) => setNewContract({ ...newContract, blockchain: e.target.value })}>
             <option>ethereum</option>
             <option>arbitrum</option>
