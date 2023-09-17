@@ -27,3 +27,9 @@ export async function getSafeTx(safe, to, data, value) {
 
   return await safe.createTransaction({ safeTransactionData });
 }
+
+export async function signTransaction(safeAddress, contractAddress, callData, value, signer) {
+  const safe = await getSafe(safeAddress, signer);
+  const safeTx = await getSafeTx(safe, contractAddress, callData, value);
+  return await safe.signTransaction(safeTx);
+}

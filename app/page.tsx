@@ -2,7 +2,8 @@
 import { fetchABI } from "@/server/fetch-abi";
 import React, { useState } from "react";
 import { Web3Button } from "@web3modal/react";
-// import { useWalletClient } from "wagmi";
+import { signTransaction } from "@/server/safe";
+import { useWalletClient } from "wagmi";
 // import { getSafe, getSafeTx } from "@/server/safe";
 
 const App = () => {
@@ -23,7 +24,7 @@ const App = () => {
     safe: "",
   });
 
-  // const { data: signer } = useWalletClient();
+  const { data: signer } = useWalletClient();
   // const safeAddress = "0xEeac56EFC9ff9806214ba1d0bdB9321953ae3e83";
   // const safe = getSafe(safeAddress, signer);
 
@@ -129,7 +130,7 @@ const App = () => {
         className="bg-blue-500 text-white px-4 py-2 rounded"
         onClick={() => setShowModal(true)}
       >
-        Add
+        Add Contract Call
       </button>
       {showModal && (
         <div className="mt-4">
@@ -232,8 +233,9 @@ const App = () => {
                   })}
               </td>
               <td className="py-2 px-4 border">
-                <button className="bg-blue-500 text-white px-4 py-2 rounded">
-                  Call
+                <button className="bg-blue-500 text-white px-4 py-2 rounded"
+                  onClick={() => signTransaction(contract.safe, contract.address, "0x", "0x", signer)}>
+                    Sign
                 </button>
               </td>
             </tr>
