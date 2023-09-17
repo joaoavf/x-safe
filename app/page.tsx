@@ -84,7 +84,17 @@ const App = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <Web3Button />
+      <div className="flex justify-between items-center mb-6">
+      {/* Step 1: Adding a Logo */}
+      <div className="text-3xl font-bold text-blue-500">
+        x-safe
+      </div>
+
+      {/* Step 2: Positioning Web3Button */}
+      <div className="flex items-center">
+        <Web3Button />
+      </div>
+    </div>
 
       <h1 className="text-2xl font-bold mb-4">Step 1 - Add Safes</h1>
       <button
