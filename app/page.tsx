@@ -49,16 +49,6 @@ const App = () => {
   const [inputValues, setInputValues] = useState({});
 
   const signer = useEthersSigner();
-  // const safeAddress = "0xEeac56EFC9ff9806214ba1d0bdB9321953ae3e83";
-  // const safe = getSafe(safeAddress, signer);
-
-  // const to = "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F";
-  // const data = "0x";
-  // const value = "0";
-
-  // const safeTx = getSafeTx(safe, to, data, value);
-
-  // console.log("safeTx", safeTx);
 
   const addContract = async () => {
     const ABI = await fetchABI(newContract.blockchain, newContract.address);
@@ -291,7 +281,7 @@ const App = () => {
                     contract.safe, 
                     contract.address, 
                     encodeFunctionCall(contract.ABI, contract.selectedFunction), 
-                    "0x", 
+                    "0", 
                     signer)}
                   >
                     Sign
