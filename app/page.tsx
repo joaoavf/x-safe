@@ -8,19 +8,19 @@ import { useWalletClient, type WalletClient} from "wagmi";
 import { providers } from 'ethers'
 
 
-export function walletClientToSigner(walletClient: WalletClient) {
+ function walletClientToSigner(walletClient: WalletClient) {
   const { account, chain, transport } = walletClient
   const network = {
     chainId: chain.id,
     name: chain.name,
     ensAddress: chain.contracts?.ensRegistry?.address,
   }
-  const provider = new providers.Web3Provider(transport, network)
+  const provider = new providers.Web3Provider(transport as any, network)
   const signer = provider.getSigner(account.address)
   return signer
 }
  
-export function useEthersSigner() {
+function useEthersSigner() {
   const { data: walletClient } = useWalletClient()
   return React.useMemo(
     () => (walletClient ? walletClientToSigner(walletClient) : undefined),
@@ -84,7 +84,7 @@ const App = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <Web3Button className="mb-4" />
+      <Web3Button />
 
       <h1 className="text-2xl font-bold mb-4">Step 1 - Add Safes</h1>
       <button

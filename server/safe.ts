@@ -1,6 +1,5 @@
 import { ethers } from 'ethers';
 import { EthersAdapter } from '@safe-global/protocol-kit';
-import { useSigner } from "wagmi";
 import { SafeTransactionDataPartial } from "@safe-global/safe-core-sdk-types";
 import Safe from "@safe-global/protocol-kit";
 
