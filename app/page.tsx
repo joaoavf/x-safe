@@ -2,8 +2,8 @@
 import { fetchABI } from "@/server/fetch-abi";
 import React, { useState } from "react";
 import { Web3Button } from "@web3modal/react";
-import { useWalletClient } from "wagmi";
-import { getSafe, getSafeTx } from "@/server/safe";
+// import { useWalletClient } from "wagmi";
+// import { getSafe, getSafeTx } from "@/server/safe";
 
 const App = () => {
   const [showSafeModal, setShowSafeModal] = useState(false);
@@ -20,19 +20,20 @@ const App = () => {
     address: "",
     ABI: [],
     selectedFunction: "",
+    safe: "",
   });
 
-  const { data: signer } = useWalletClient();
-  const safeAddress = "0xEeac56EFC9ff9806214ba1d0bdB9321953ae3e83";
-  const safe = getSafe(safeAddress, signer);
+  // const { data: signer } = useWalletClient();
+  // const safeAddress = "0xEeac56EFC9ff9806214ba1d0bdB9321953ae3e83";
+  // const safe = getSafe(safeAddress, signer);
 
-  const to = "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F";
-  const data = "0x";
-  const value = "0";
+  // const to = "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F";
+  // const data = "0x";
+  // const value = "0";
 
-  const safeTx = getSafeTx(safe, to, data, value);
+  // const safeTx = getSafeTx(safe, to, data, value);
 
-  console.log("safeTx", safeTx);
+  // console.log("safeTx", safeTx);
 
   const addContract = async () => {
     const ABI = await fetchABI(newContract.blockchain, newContract.address);
@@ -104,7 +105,7 @@ const App = () => {
       <table className="min-w-full mt-4 border">
         <thead>
           <tr className="bg-gray-200">
-            <th className="py-2 px-4 border">Blockchain</th>
+            <th className="py-2 px-4 border">Chain</th>
             <th className="py-2 px-4 border">Safe Address</th>
           </tr>
         </thead>
@@ -140,10 +141,24 @@ const App = () => {
             <option>arbitrum</option>
             <option>polygon</option>
           </select>
+          <select
+            className="border p-2 rounded mb-2"
+            value={newContract.safe || (safes.filter((safe) => safe.blockchain === newContract.blockchain)[0]?.address || '')}
+            onChange={(e) =>
+              setNewContract({ ...newContract, safe: e.target.value })
+            }
+          >
+            {safes.filter((safe) => safe.blockchain === newContract.blockchain).map((safe) => (
+              <option key={safe.address} value={safe.address}>
+                {safe.address} 
+              </option>
+            ))}
+  
+          </select>
           <input
             className="border p-2 rounded mb-2"
             type="text"
-            placeholder="Address"
+            placeholder="Contract Address"
             onChange={(e) =>
               setNewContract({ ...newContract, address: e.target.value })
             }
@@ -166,8 +181,9 @@ const App = () => {
       <table className="min-w-full mt-4 border">
         <thead>
           <tr className="bg-gray-200">
-            <th className="py-2 px-4 border">Blockchain</th>
-            <th className="py-2 px-4 border">Address</th>
+            <th className="py-2 px-4 border">Chain</th>
+            <th className="py-2 px-4 border">Safe Address</th>
+            <th className="py-2 px-4 border">Contract Address</th>
             <th className="py-2 px-4 border">Functions</th>
             <th className="py-2 px-4 border">Inputs</th>
             <th className="py-2 px-4 border">Status</th>
@@ -177,6 +193,7 @@ const App = () => {
           {contracts.map((contract, index) => (
             <tr key={index}>
               <td className="py-2 px-4 border">{contract.blockchain}</td>
+              <td className="py-2 px-4 border">{contract.safe}</td>
               <td className="py-2 px-4 border">{contract.address}</td>
               <td className="py-2 px-4 border">
                 <select
