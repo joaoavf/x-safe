@@ -3,8 +3,30 @@ import { fetchABI } from "@/server/fetch-abi";
 import React, { useState } from "react";
 import { Web3Button } from "@web3modal/react";
 import { signTransaction } from "@/server/safe";
-import { useWalletClient } from "wagmi";
+import { useWalletClient, type WalletClient} from "wagmi";
 // import { getSafe, getSafeTx } from "@/server/safe";
+import { providers } from 'ethers'
+
+
+export function walletClientToSigner(walletClient: WalletClient) {
+  const { account, chain, transport } = walletClient
+  const network = {
+    chainId: chain.id,
+    name: chain.name,
+    ensAddress: chain.contracts?.ensRegistry?.address,
+  }
+  const provider = new providers.Web3Provider(transport, network)
+  const signer = provider.getSigner(account.address)
+  return signer
+}
+ 
+export function useEthersSigner() {
+  const { data: walletClient } = useWalletClient()
+  return React.useMemo(
+    () => (walletClient ? walletClientToSigner(walletClient) : undefined),
+    [walletClient],
+  )
+}
 
 const App = () => {
   const [showSafeModal, setShowSafeModal] = useState(false);
@@ -24,7 +46,7 @@ const App = () => {
     safe: "",
   });
 
-  const { data: signer } = useWalletClient();
+  const signer = useEthersSigner();
   // const safeAddress = "0xEeac56EFC9ff9806214ba1d0bdB9321953ae3e83";
   // const safe = getSafe(safeAddress, signer);
 

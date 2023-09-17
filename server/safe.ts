@@ -8,7 +8,7 @@ import Safe from "@safe-global/protocol-kit";
 export function getEthAdapter(signer) {
   return new EthersAdapter({
     ethers,
-    signer,
+    signerOrProvider: signer,
   })
 }
 
@@ -29,7 +29,8 @@ export async function getSafeTx(safe, to, data, value) {
 }
 
 export async function signTransaction(safeAddress, contractAddress, callData, value, signer) {
-  const safe = await getSafe(safeAddress, signer);
+  console.log("signing transaction", signer);
+  const safe = await getSafe(safeAddress, signer.account);
   const safeTx = await getSafeTx(safe, contractAddress, callData, value);
   return await safe.signTransaction(safeTx);
 }
