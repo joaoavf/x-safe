@@ -5,7 +5,7 @@ import { Web3Button } from "@web3modal/react";
 import { signTransaction } from "@/server/safe";
 import { useWalletClient, type WalletClient} from "wagmi";
 // import { getSafe, getSafeTx } from "@/server/safe";
-import { providers } from 'ethers'
+import { ethers, providers } from 'ethers'
 
 
  function walletClientToSigner(walletClient: WalletClient) {
@@ -46,6 +46,8 @@ const App = () => {
     safe: "",
   });
 
+  const [inputValues, setInputValues] = useState({});
+
   const signer = useEthersSigner();
   // const safeAddress = "0xEeac56EFC9ff9806214ba1d0bdB9321953ae3e83";
   // const safe = getSafe(safeAddress, signer);
@@ -81,6 +83,22 @@ const App = () => {
     const newContracts = [...contracts];
     setContracts(newContracts);
   }
+
+  function handleInputChange(functionName, index, value){
+    const updatedValues = { ...inputValues };
+    if (!updatedValues[functionName]) {
+      updatedValues[functionName] = [];
+    }
+    updatedValues[functionName][index] = value;
+    setInputValues(updatedValues);;
+  }
+
+  const encodeFunctionCall = (ABI, functionName) => {
+    const values = inputValues[functionName] || [];
+    const contractInterface = new ethers.utils.Interface(ABI.slice(1));
+
+    return contractInterface.encodeFunctionData(functionName, values);
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -256,6 +274,9 @@ const App = () => {
                               <input
                                 className="border p-1 rounded"
                                 type="text"
+                                onChange={(e) =>
+                                  handleInputChange(contract.selectedFunction, inputIndex, e.target.value)
+                                }
                               />
                             </div>
                           ))}
@@ -266,7 +287,13 @@ const App = () => {
               </td>
               <td className="py-2 px-4 border">
                 <button className="bg-blue-500 text-white px-4 py-2 rounded"
-                  onClick={() => signTransaction(contract.safe, contract.address, "0x", "0x", signer)}>
+                  onClick={() => signTransaction(
+                    contract.safe, 
+                    contract.address, 
+                    encodeFunctionCall(contract.ABI, contract.selectedFunction), 
+                    "0x", 
+                    signer)}
+                  >
                     Sign
                 </button>
               </td>
