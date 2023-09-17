@@ -30,7 +30,7 @@ export async function getSafeTx(safe, to, data, value) {
 
 export async function signTransaction(safeAddress, contractAddress, callData, value, signer) {
   console.log("signing transaction", signer);
-  const safe = await getSafe(safeAddress, signer.account);
+  const safe = await getSafe(safeAddress, signer);
   const safeTx = await getSafeTx(safe, contractAddress, callData, value);
   return await safe.signTransaction(safeTx);
 }
