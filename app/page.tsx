@@ -39,6 +39,9 @@ const App = () => {
     const ABI = await fetchABI(newContract.blockchain, newContract.address);
     // Add ABI to contract
     newContract.ABI = ABI;
+    if (newContract.safe === ""){
+      newContract.safe = safes.filter((safe) => safe.blockchain === newContract.blockchain)[0].address;
+    }
     const newContracts = [...contracts, newContract];
     setContracts(newContracts);
     setShowModal(false);
@@ -143,7 +146,6 @@ const App = () => {
           </select>
           <select
             className="border p-2 rounded mb-2"
-            value={newContract.safe || (safes.filter((safe) => safe.blockchain === newContract.blockchain)[0]?.address || '')}
             onChange={(e) =>
               setNewContract({ ...newContract, safe: e.target.value })
             }
